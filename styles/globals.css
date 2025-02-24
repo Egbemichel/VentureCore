@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --page-margin: min(2rem, 5vw);
+}
+
+.container {
+  display: grid;
+  grid-template-columns: var(--page-margin) [center-start] 1fr [center-end] var(
+      --page-margin
+    );
+
+  & > * {
+    grid-column: center;
+  }
+}
+.card {
+  display: grid;
+  place-content: center;
+}
+
+.cards-wrapper {
+  grid-column: center-start / -1;
+  display: grid;
+  grid-auto-flow: column;
+  gap: 2px;
+  overflow: auto;
+  padding-bottom: 5px;
+  padding-right: var(--page-margin);
+  z-index: 10;
+}
