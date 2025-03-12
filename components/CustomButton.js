@@ -1,12 +1,12 @@
 import React from "react";
 
-const CustomButton = ({ width, onClick, text, type = "button" }) => {
+const CustomButton = ({ width, onClick, text, mt, ml, type = "button" }) => {
   return (
     <div className="mt-[62px] flex items-center justify-center">
       <button
         type={type}
         onClick={onClick}
-        className={`bg-[#6c63ff] text-black py-2 rounded-[8px] h-[42px] cursor-pointer`}
+        className={`bg-[#6c63ff] ${mt} ${ml} text-black py-2 rounded-[8px] h-[42px] cursor-pointer`}
         style={{ width: width }}
       >
         {text}

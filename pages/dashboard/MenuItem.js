@@ -29,11 +29,15 @@ export const MenuItem = ({ i }) => {
   const currentPath = router.pathname; // Get the current route
 
   const links = [
-    { path: "./member", icon: <HomeIcon />, label: "Home" },
-    { path: "./admin", icon: <CourseIcon />, label: "Courses" },
-    { path: "./non-member", icon: <NotiIcon />, label: "Notifications" },
-    { path: "/wiki", icon: <WikiIcon />, label: "Wiki" },
-    { path: "/message-admin", icon: <MAdminIcon />, label: "Message Admin" },
+    { path: "/dashboard/member", icon: HomeIcon, label: "Home" },
+    { path: "/dashboard/admin", icon: CourseIcon, label: "Courses" },
+    {
+      path: "/dashboard/notifications",
+      icon: NotiIcon,
+      label: "Notifications",
+    },
+    { path: "/wiki", icon: WikiIcon, label: "Wiki" },
+    { path: "/message-admin", icon: MAdminIcon, label: "Message Admin" },
   ];
 
   const handleLogout = () => {
@@ -51,16 +55,13 @@ export const MenuItem = ({ i }) => {
         <Link href={links[i].path} className="flex items-center space-x-2">
           <div className="icon-placeholder">
             {/* Change icon color if active */}
-            {React.cloneElement(links[i].icon, {
-              className:
-                currentPath === links[i].path
-                  ? "text-transparent"
-                  : "text-white",
+            {React.createElement(links[i].icon, {
+              color: currentPath === links[i].path ? "black" : "white",
             })}
           </div>
           <div
-            className={`text-xl ${
-              currentPath === links[i].path ? "text-transparent" : "text-white"
+            className={`text-2xl ${
+              currentPath === links[i].path ? "text-black" : "text-white"
             }`}
           >
             {links[i].label}

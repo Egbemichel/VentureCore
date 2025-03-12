@@ -6,9 +6,9 @@ import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import Heading from "@/components/Heading";
 import ProjectCard from "@/components/ProjectCard";
-import Navbar from "@/components/Navbar";
 import "../../styles/globals.css";
 import "../../styles/styles.css";
+import { useZIndex } from "@/context/ZIndexContext";
 
 export default function MemberDashboard() {
   const [projects, setProjects] = useState([]);
@@ -17,7 +17,7 @@ export default function MemberDashboard() {
   const [storedSession, setStoredSession] = useState(null);
   const scrollRef = useRef(null);
   const isDragging = useRef(false);
-  const [isZIndexReduced, setIsZIndexReduced] = useState(false);
+  const { isZIndexReduced } = useZIndex();
 
   // Handle Dragging for Scrollable Project Cards
   const handleMouseDown = () => (isDragging.current = true);
@@ -87,12 +87,6 @@ export default function MemberDashboard() {
 
   return (
     <div className="flex flex-col min-h-screen overflow-y-auto">
-      {/* Navbar */}
-      <Navbar
-        isZIndexReduced={isZIndexReduced}
-        setIsZIndexReduced={setIsZIndexReduced}
-      />
-
       {/* Project Overview */}
       <Heading text="Project Overview" color="gray" fontSize="16px" />
 

@@ -10,6 +10,7 @@ import { Navigation } from "@/pages/dashboard/Navigation";
 import SearchIcon from "@/components/searchIcon";
 import InputField from "@/components/InputField";
 import NameIcon from "@/components/NameIcon";
+import { useZIndex } from "@/context/ZIndexContext";
 
 const sidebar = {
   open: (height = 1000) => ({
@@ -22,7 +23,7 @@ const sidebar = {
   },
 };
 
-export default function Navbar({ isZIndexReduced, setIsZIndexReduced }) {
+export default function Navbar() {
   const [isOpen, toggleOpen] = useCycle(false, true);
   const containerRef = useRef(null);
   const { height } = useDimensions(containerRef);
@@ -30,6 +31,7 @@ export default function Navbar({ isZIndexReduced, setIsZIndexReduced }) {
   const [searchQuery, setSearchQuery] = useState("");
   const { data: session } = useSession();
   const user = session?.user;
+  const { isZIndexReduced, setIsZIndexReduced } = useZIndex();
 
   useEffect(() => {
     if (isOpen) {

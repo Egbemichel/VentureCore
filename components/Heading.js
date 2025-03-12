@@ -1,7 +1,7 @@
 // Heading Component
 const Heading = ({ text, color, fontSize }) => {
   return (
-    <h2 className={`text-${color}-500 m-4`} style={{ fontSize }}>
+    <h2 className={`text-${color}-500 ml-4`} style={{ fontSize }}>
       {text}
     </h2>
   );

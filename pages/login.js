@@ -84,7 +84,13 @@ export default function Login() {
           type="password"
           name="password"
         />
-        <CustomButton width="266px" type="submit" text="Login" />
+        <CustomButton
+          width="266px"
+          mt={"mt-[503px]"}
+          ml={"ml-[47px]"}
+          type="submit"
+          text="Login"
+        />
       </form>
 
       <p className="mt-4 text-sm">

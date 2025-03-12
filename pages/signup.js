@@ -89,7 +89,13 @@ export default function SignUp() {
           Login
         </span>
       </p>
-      <CustomButton width="266px" onClick={handleSubmit} text="Register" />
+      <CustomButton
+        width="266px"
+        mt={"mt-[665px]"}
+        ml={"ml-[46px]"}
+        onClick={handleSubmit}
+        text="Register"
+      />
       <CustomModal
         isOpen={modalOpen}
         onClose={handleModalClose}
