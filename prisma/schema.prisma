@@ -14,19 +14,96 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid())
-  email    String @unique
-  password String
-  name     String
-  image    String?
-  sessions Session[]
-  createdAt DateTime @default(now())
+  id        String       @id @default(uuid())
+  email     String       @unique
+  password  String
+  name      String
+  image     String?
+  projects  TeamMember[]
+  tasks     Task[]
+  createdAt DateTime     @default(now())
+  Project   Project[]
 }
 
-model Session {
-  id           String @id @default(uuid())
-  sessionToken String @unique
-  userId       String
-  expires      DateTime
-  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Project {
+  id            String          @id @default(uuid())
+  name          String
+  description   String
+  progress      Float           @default(0.0)
+  deadline      DateTime
+  teamLeaderId  String
+  teamLeader    User            @relation(fields: [userId], references: [id])
+  members       TeamMember[]
+  tasks         Task[]
+  announcements Announcement[]
+  budget        Budget[]
+  events        CalendarEvent[]
+  createdAt     DateTime        @default(now())
+  userId        String
+}
+
+model TeamMember {
+  id        String  @id @default(uuid())
+  userId    String
+  projectId String
+  role      String
+  user      User    @relation(fields: [userId], references: [id])
+  project   Project @relation(fields: [projectId], references: [id])
+}
+
+model Task {
+  id           String        @id @default(uuid())
+  name         String
+  description  String
+  projectId    String
+  assignedToId String
+  assignedTo   User?         @relation(fields: [assignedToId], references: [id])
+  progress     Float         @default(0.0)
+  cost         Float         @default(0.0)
+  deadline     DateTime
+  project      Project       @relation(fields: [projectId], references: [id])
+  files        TaskFile[]
+  createdAt    DateTime      @default(now())
+  BudgetUsage  BudgetUsage[]
+}
+
+model TaskFile {
+  id      String @id @default(uuid())
+  taskId  String
+  fileUrl String
+  task    Task   @relation(fields: [taskId], references: [id])
+}
+
+model Announcement {
+  id        String   @id @default(uuid())
+  projectId String
+  message   String
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id])
+}
+
+model Budget {
+  id        String   @id @default(uuid())
+  projectId String
+  donor     String
+  type      String
+  amount    Float
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id])
+}
+
+model BudgetUsage {
+  id     String @id @default(uuid())
+  taskId String
+  amount Float
+  task   Task   @relation(fields: [taskId], references: [id])
+}
+
+model CalendarEvent {
+  id        String   @id @default(uuid())
+  projectId String
+  title     String
+  date      DateTime
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id])
 }

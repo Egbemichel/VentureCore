@@ -22,7 +22,7 @@ export default function Home() {
 
   const handleNext = () => {
     if (step < 2) setStep(step + 1);
-    else router.push("/signup");
+    else router.push("/login");
   };
 
   const getBackgroundColor = () => {

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import CustomModal from "@/components/CustomModal";
 import login from "../app/assets/images/login.jpg";
@@ -11,11 +11,25 @@ import Image from "next/image";
 import "../styles/globals.css";
 
 export default function Login() {
+  const { data: session, status } = useSession();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState("");
   const [modalMessage, setModalMessage] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      // Redirect based on role if already logged in
+      let dashboard = "/dashboard/non-member";
+      if (session?.user?.role === "admin") {
+        dashboard = "/dashboard/admin";
+      } else if (session?.user?.role === "member") {
+        dashboard = "/dashboard/member";
+      }
+      router.push(dashboard);
+    }
+  }, [session, status, router]);
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -30,28 +44,18 @@ export default function Login() {
 
     if (res?.error) {
       setModalType("error");
-      setModalMessage("Invalid email or password!");
+      setModalMessage(
+        "Invalid Credentials. Ensure email and password are correct and try again!"
+      );
       setModalOpen(true);
     } else {
-      // Fetch user session to determine role-based redirection
-      const userSession = await fetch("/api/auth/session").then((res) =>
-        res.json()
-      );
-
-      let dashboard = "/dashboard/non-member"; // Default non-member dashboard
-      if (userSession?.user?.role === "admin") {
-        dashboard = "/dashboard/admin";
-      } else if (userSession?.user?.role === "member") {
-        dashboard = "/dashboard/member";
-      }
-
       setModalType("success");
       setModalMessage("Login successful!");
       setModalOpen(true);
 
       setTimeout(() => {
-        router.push(dashboard); // Redirect to role-based dashboard
-      }, 2000); // Delay for modal effect
+        router.reload(); // Reload to apply session change
+      }, 2000);
     }
   };
 
