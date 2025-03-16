@@ -79,7 +79,7 @@ export default function Home() {
           </div>
           <button
             onClick={handleNext}
-            className="fixed mt-[41rem] ml-[17.5rem] w-[68px] h-[68px] bg-[#1E1E1E] text-white px-4 py-2 rounded-full flex items-center justify-center"
+            className="fixed mt-[4rem] ml-[17.5rem] w-[68px] h-[68px] bg-[#1E1E1E] text-white px-4 py-2 rounded-full flex items-center justify-center"
           >
             <NextIcon />
           </button>
@@ -107,7 +107,7 @@ export default function Home() {
           </div>
           <button
             onClick={handleNext}
-            className="fixed mt-[41rem] ml-[17.5rem] flex items-center right-4 w-[68px] h-[68px] bg-[#1E1E1E] text-white px-4 py-2 rounded-full justify-center"
+            className="fixed mt-[4rem] ml-[17.5rem] flex items-center w-[68px] h-[68px] bg-[#1E1E1E] text-white px-4 py-2 rounded-full justify-center"
           >
             <NextIcon />
           </button>

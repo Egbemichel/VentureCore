@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
-
-const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -39,7 +37,7 @@ export default async function handler(req, res) {
         return res.status(201).json({
           success: true,
           message: "Account created!",
-          redirectTo: dashboard,
+          redirectTo: "/login",
         });
       }
 

@@ -12,8 +12,11 @@ const Path = (props) => (
   />
 );
 
-const MenuToggle = ({ toggle }) => (
-  <button onClick={toggle} className="ml-3">
+const MenuToggle = ({ toggle, css }) => (
+  <button
+    onClick={toggle}
+    className={`ml-3 ${css} relative top-[-827px] sm:top-[-898px] md:top-[-898px] lg:top-[-527px]`}
+  >
     <svg width="23" height="23" viewBox="0 0 23 23">
       <Path
         variants={{

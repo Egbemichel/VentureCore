@@ -24,7 +24,7 @@ const variants = {
     transition: { y: { stiffness: 1000 } },
   },
 };
-export const MenuItem = ({ i }) => {
+export const MenuItem = ({ i, isOpen }) => {
   const router = useRouter();
   const currentPath = router.pathname; // Get the current route
 
@@ -50,6 +50,7 @@ export const MenuItem = ({ i }) => {
       variants={variants}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
+      className={`${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}
     >
       {i < links.length ? (
         <Link href={links[i].path} className="flex items-center space-x-2">
@@ -73,9 +74,9 @@ export const MenuItem = ({ i }) => {
           onClick={handleLogout}
         >
           <div className="icon-placeholder">
-            <LogoutIcon />
+            <LogoutIcon stroke={"#ef4444"} />
           </div>
-          <div className="text-white text-xl">Log Out</div>
+          <div className="text-red-500 text-xl">Log Out</div>
         </div>
       )}
     </motion.li>

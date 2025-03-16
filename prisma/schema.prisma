@@ -32,14 +32,13 @@ model Project {
   progress      Float           @default(0.0)
   deadline      DateTime
   teamLeaderId  String
-  teamLeader    User            @relation(fields: [userId], references: [id])
+  teamLeader    User            @relation(fields: [teamLeaderId], references: [id])
   members       TeamMember[]
   tasks         Task[]
   announcements Announcement[]
   budget        Budget[]
   events        CalendarEvent[]
   createdAt     DateTime        @default(now())
-  userId        String
 }
 
 model TeamMember {

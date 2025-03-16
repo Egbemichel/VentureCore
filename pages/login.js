@@ -67,7 +67,7 @@ export default function Login() {
       </p>
       <Image src={login} width={327} height={240} alt="Login" />
 
-      <form onSubmit={handleSubmit} className="max-w-sm">
+      <form onSubmit={handleSubmit} className="max-w-sm" autoComplete="email">
         <InputField
           IconComponent={EmailIcon}
           handleChange={handleChange}
@@ -84,13 +84,7 @@ export default function Login() {
           type="password"
           name="password"
         />
-        <CustomButton
-          width="266px"
-          mt={"mt-[503px]"}
-          ml={"ml-[47px]"}
-          type="submit"
-          text="Login"
-        />
+        <CustomButton width="266px" mt={"20px"} type="submit" text="Login" />
       </form>
 
       <p className="mt-4 text-sm">

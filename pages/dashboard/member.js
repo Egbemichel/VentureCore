@@ -6,26 +6,19 @@ import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import Heading from "@/components/Heading";
 import ProjectCard from "@/components/ProjectCard";
-import "../../styles/globals.css";
-import "../../styles/styles.css";
 import { useZIndex } from "@/context/ZIndexContext";
+import QuickActions from "@/components/QuickActions"; // Import plus icon
 
 export default function MemberDashboard() {
   const [projects, setProjects] = useState([]);
   const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [storedSession, setStoredSession] = useState(null);
   const scrollRef = useRef(null);
   const isDragging = useRef(false);
   const { isZIndexReduced } = useZIndex();
-
-  // Handle Dragging for Scrollable Project Cards
-  const handleMouseDown = () => (isDragging.current = true);
-  const handleMouseUp = () => (isDragging.current = false);
-  const handleMouseMove = (e) => {
-    if (!isDragging.current) return;
-    scrollRef.current.scrollLeft -= e.movementX * 1.5;
-  };
+  const [selectedProject, setSelectedProject] = useState(null);
 
   // ✅ Restore session from cookie if lost
   useEffect(() => {
@@ -43,72 +36,88 @@ export default function MemberDashboard() {
     if (status === "authenticated" && user?.role !== "member") {
       router.push("/dashboard/non-member");
     }
-
-    if (user) {
-      setProjects([
-        {
-          name: "Project A",
-          currentTask: "Design UI",
-          progress: 70,
-          deadline: "March 15, 2025",
-          teamLeader: "Alice Johnson",
-          teamLeaderImage: "/assets/images/Alice1.jpeg",
-        },
-        {
-          name: "Project B",
-          currentTask: "Develop API",
-          progress: 45,
-          deadline: "April 10, 2025",
-          teamLeader: "Bob Smith",
-          teamLeaderImage: "/assets/images/Bob1.jpeg",
-        },
-        {
-          name: "Project C",
-          currentTask: "Test Application",
-          progress: 90,
-          deadline: "May 5, 2025",
-          teamLeader: "Charlie Brown",
-          teamLeaderImage: "/assets/images/Charlie1.jpeg",
-        },
-        {
-          name: "Project D",
-          currentTask: "Deploy App",
-          progress: 25,
-          deadline: "June 20, 2025",
-          teamLeader: "David Lee",
-          teamLeaderImage: "/assets/images/David1.jpeg",
-        },
-      ]);
-    }
   }, [user, status, router]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch("/api/projects");
+        const data = await response.json();
+
+        if (response.ok) {
+          setProjects(data.projects);
+        } else {
+          console.error("Error fetching projects:", data.error);
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (session) {
+      fetchProjects();
+    }
+  }, [session]);
 
   if (status === "loading" && !user) return <p>Loading...</p>;
   if (!user) return <p>Unauthorized. Please log in.</p>;
 
   return (
-    <div className="flex flex-col min-h-screen overflow-y-auto">
+    <div className="flex flex-col">
       {/* Project Overview */}
       <Heading text="Project Overview" color="gray" fontSize="16px" />
 
       {/* Project Cards with Smooth Scrolling */}
-      <div
-        ref={scrollRef}
-        className={`flex space-x-4 overflow-x-scroll p-4 m-4 snap-x snap-mandatory ${
-          isZIndexReduced ? "z-0" : "z-10"
-        }`}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onMouseMove={handleMouseMove}
-      >
-        {projects.map((project, index) => (
-          <div key={index} className="snap-start shrink-0 cards-wrapper">
-            <ProjectCard project={project} />
+      {loading ? (
+        <p>Loading projects...</p>
+      ) : projects.length === 0 ? (
+        <div className="flex flex-col items-center justify-center p-6">
+          <p className="text-lg font-semibold">
+            You are a part of no projects.
+          </p>
+          <p className="text-gray-600">Next Move?</p>
+          <div className="mt-4 flex space-x-4">
+            <a href="/projects/open" className="text-blue-500 hover:underline">
+              Browse all open projects
+            </a>
+            <a href="/courses" className="text-blue-500 hover:underline">
+              Take a course
+            </a>
           </div>
-        ))}
-      </div>
+        </div>
+      ) : (
+        <div
+          ref={scrollRef}
+          className={`flex space-x-4 overflow-x-scroll p-4 m-4 snap-x snap-mandatory ${
+            isZIndexReduced ? "z-0" : "z-10"
+          }`}
+          onMouseDown={() => (isDragging.current = true)}
+          onMouseUp={() => (isDragging.current = false)}
+          onMouseMove={(e) => {
+            if (!isDragging.current) return;
+            scrollRef.current.scrollLeft -= e.movementX * 1.5;
+          }}
+        >
+          {projects.map((project) => (
+            <div key={project.id} className="snap-start shrink-0 cards-wrapper">
+              <ProjectCard project={project} onSelect={setSelectedProject} />
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Quick Actions */}
       <Heading text="Quick Actions" color="gray" fontSize="16px" />
+
+      {/* Add Project Button */}
+
+      <QuickActions
+        selectedProject={selectedProject}
+        userId={session?.user?.id}
+      />
+      <Heading text="Project Stats" color="gray" fontSize="16px" />
     </div>
   );
 }

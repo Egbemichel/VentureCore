@@ -23,7 +23,7 @@ const sidebar = {
   },
 };
 
-export default function Navbar() {
+export default function Navbar({ bgColor }) {
   const [isOpen, toggleOpen] = useCycle(false, true);
   const containerRef = useRef(null);
   const { height } = useDimensions(containerRef);
@@ -61,11 +61,16 @@ export default function Navbar() {
         animate={isOpen ? "open" : "closed"}
         custom={height}
         ref={containerRef}
-        className={`sidebar ${isOpen ? "z-30" : "z-10"}`}
+        className={`${isOpen ? "z-30" : "z-10"}`}
       >
-        <motion.div className="background" variants={sidebar} />
-        <Navigation />
-        <MenuToggle toggle={() => toggleOpen()} />
+        <motion.div
+          className={`background ${bgColor} ${
+            isOpen ? "pointer-events-auto" : "pointer-events-none"
+          }`}
+          variants={sidebar}
+        />
+        <Navigation isOpen={isOpen} />
+        <MenuToggle toggle={() => toggleOpen()} css={"pointer-events-auto"} />
       </motion.nav>
 
       {/* Top Navigation Section */}

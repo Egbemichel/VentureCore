@@ -1,4 +1,4 @@
-const LogoutIcon = ({ stroke }) => {
+const TaskIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,8 +8,8 @@ const LogoutIcon = ({ stroke }) => {
       fill="none"
     >
       <path
-        d="M20 12H10M20 12L17 9M20 12L17 15M14 7V6C14 4.89543 13.1046 4 12 4L6 4C4.89543 4 4 4.89543 4 6V18C4 19.1046 4.89543 20 6 20H12C13.1046 20 14 19.1046 14 18V17"
-        stroke={stroke}
+        d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
+        stroke="white"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -17,4 +17,5 @@ const LogoutIcon = ({ stroke }) => {
     </svg>
   );
 };
-export default LogoutIcon;
+
+export default TaskIcon;

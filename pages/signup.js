@@ -91,8 +91,7 @@ export default function SignUp() {
       </p>
       <CustomButton
         width="266px"
-        mt={"mt-[665px]"}
-        ml={"ml-[46px]"}
+        mt={"mt-[10px]"}
         onClick={handleSubmit}
         text="Register"
       />
