@@ -5,13 +5,6 @@ export default async function handler(req, res) {
     try {
       const { name, description, deadline, teamLeaderId } = req.body;
 
-      console.log("Received data:", {
-        name,
-        description,
-        deadline,
-        teamLeaderId,
-      });
-
       const newProject = await prisma.project.create({
         data: {
           name,
@@ -20,8 +13,6 @@ export default async function handler(req, res) {
           teamLeader: { connect: { id: teamLeaderId } },
         },
       });
-
-      console.log("Project created:", newProject);
       return res.status(201).json(newProject);
     } catch (error) {
       console.error("Error creating project:", error); // Log the full error

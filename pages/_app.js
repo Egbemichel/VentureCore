@@ -12,6 +12,7 @@ function MyApp({ Component, pageProps }) {
 
   const getBackgroundColor = () => {
     const paths = [
+      "/dashboard/add-task",
       "/dashboard/modify-project",
       "/dashboard/manage-team",
       "/dashboard/post",
@@ -21,18 +22,20 @@ function MyApp({ Component, pageProps }) {
       "/dashboard/upload-file-member",
     ];
     if (router.pathname === paths[0]) {
-      return "bg-[#22c55e]";
+      return "bg-[#3b82f6]";
     } else if (router.pathname === paths[1]) {
-      return "bg-[#eab308]";
+      return "bg-[#22c55e]";
     } else if (router.pathname === paths[2]) {
-      return "bg-[#a855f7]";
+      return "bg-[#eab308]";
     } else if (router.pathname === paths[3]) {
-      return "bg-[#ef4444]";
+      return "bg-[#a855f7]";
     } else if (router.pathname === paths[4]) {
-      return "bg-[#6b7280]";
+      return "bg-[#ef4444]";
     } else if (router.pathname === paths[5]) {
-      return "bg-[#f97316]";
+      return "bg-[#6b7280]";
     } else if (router.pathname === paths[6]) {
+      return "bg-[#f97316]";
+    } else if (router.pathname === paths[7]) {
       return "bg-[#ef4444]";
     } else return "bg-[#6c63ff]";
   };

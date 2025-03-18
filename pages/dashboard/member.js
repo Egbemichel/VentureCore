@@ -8,6 +8,7 @@ import Heading from "@/components/Heading";
 import ProjectCard from "@/components/ProjectCard";
 import { useZIndex } from "@/context/ZIndexContext";
 import QuickActions from "@/components/QuickActions"; // Import plus icon
+import Tasks from "@/components/Tasks";
 
 export default function MemberDashboard() {
   const [projects, setProjects] = useState([]);
@@ -118,6 +119,8 @@ export default function MemberDashboard() {
         userId={session?.user?.id}
       />
       <Heading text="Project Stats" color="gray" fontSize="16px" />
+      <p className="font-bold pl-6 text-gray-500">Tasks</p>
+      <Tasks projectId={selectedProject?.id} />
     </div>
   );
 }

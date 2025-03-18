@@ -1,105 +1,108 @@
-"use client";
-
-import { useState } from "react";
+//Styling needs to be done
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
 import { useZIndex } from "@/context/ZIndexContext";
 
-export default function ManageTeam() {
-  const { data: session } = useSession();
+const ManageTeam = () => {
   const router = useRouter();
-  const { isZIndexReduced } = useZIndex(); // add context for z-index management
+  const { projectId } = router.query;
 
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    deadline: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [users, setUsers] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState("");
+  const [role, setRole] = useState("member");
+  const { isZIndexReduced } = useZIndex();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    if (!projectId) return;
+
+    const fetchUsers = async () => {
+      const res = await fetch("/api/users"); // Fetch all users
+      const data = await res.json();
+      setUsers(data);
+    };
+
+    const fetchMembers = async () => {
+      const res = await fetch(`/api/team-members?projectId=${projectId}`);
+      const data = await res.json();
+      setMembers(data);
+    };
+
+    fetchUsers();
+    fetchMembers();
+  }, [projectId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
 
-    if (!formData.name || !formData.description || !formData.deadline) {
-      setError("All fields are required.");
-      setLoading(false);
-      return;
-    }
+    const res = await fetch("/api/team-members", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ projectId, userId: selectedUser, role }),
+    });
 
-    try {
-      const res = await fetch("/api/createproject", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.name,
-          description: formData.description,
-          deadline: new Date(formData.deadline).toISOString(),
-          teamLeaderId: session?.user?.id, // Send only the ID, not the whole user object
-        }),
-      });
-      if (!res.ok) throw new Error("Failed to create project.");
-
-      router.push("/dashboard/member"); // Redirect to dashboard
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
+    if (res.ok) {
+      setSelectedUser("");
+      setRole("member");
+      router.reload();
+    } else {
+      console.error("Failed to add member");
     }
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 rounded-md mt-10 ">
-      <h1 className="text-[25px] text-[#eab308] font-bold mb-4">Manage Team</h1>
+    <div className={`p-4 max-w-lg mx-auto ${isZIndexReduced ? "z-0" : "z-10"}`}>
+      <h2 className="text-xl font-bold mb-4">Manage Team</h2>
+      <form
+        onSubmit={handleSubmit}
+        className={`space-y-4 ${isZIndexReduced ? "z-0" : "z-10"}`}
+      >
+        <select
+          value={selectedUser}
+          onChange={(e) => setSelectedUser(e.target.value)}
+          required
+          className={`${isZIndexReduced ? "z-0" : "z-10"} relative`}
+        >
+          <option value="" className={`${isZIndexReduced ? "z-0" : "z-10"}`}>
+            Select a user
+          </option>
+          {users.map((user) => (
+            <option
+              key={user.id}
+              value={user.id}
+              disabled={members.some((m) => m.id === user.id)}
+            >
+              {user.name}
+            </option>
+          ))}
+        </select>
 
-      {error && <p className="text-red-500 mb-3">{error}</p>}
+        <select
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          className={`${isZIndexReduced ? "z-0" : "z-10"} relative`}
+        >
+          <option value="member">Member</option>
+          <option value="admin">Admin</option>
+        </select>
 
-      <form onSubmit={handleSubmit} className="flex flex-col">
-        <div className="space-y-4 flex flex-col">
-          <input
-            type="text"
-            name="name"
-            placeholder="Project Name"
-            value={formData.name}
-            onChange={handleChange}
-            className={`border p-2 rounded ${
-              isZIndexReduced ? "z-0" : "z-10"
-            } w-full`}
-          />
-          <textarea
-            name="description"
-            placeholder="Project Description"
-            value={formData.description}
-            onChange={handleChange}
-            className={`border p-2 rounded ${
-              isZIndexReduced ? "z-0" : "z-10"
-            } w-full`}
-          />
-          <input
-            type="date"
-            name="deadline"
-            value={formData.deadline}
-            onChange={handleChange}
-            className={`border p-2 rounded ${
-              isZIndexReduced ? "z-0" : "z-10"
-            } w-full`}
-          />
-        </div>
         <button
           type="submit"
-          disabled={loading}
-          className={`bg-[#eab308] text-white p-2 rounded bottom-0 add-button2 ${
-            isZIndexReduced ? "z-0" : "z-10"
-          } w-[93%] hover:bg-yellow-700 transition`}
+          className={`${isZIndexReduced ? "z-0" : "z-10"} m-4`}
         >
-          {loading ? "Confirming..." : "Confirm"}
+          Add Member
         </button>
       </form>
+      <h3 className="text-lg font-bold mt-6">Current Team Members</h3>
+      <ul className={`relative ${isZIndexReduced ? "z-0" : "z-10"}`}>
+        {members.map((member) => (
+          <li key={member.id} className="border p-2 rounded">
+            {member.name}
+          </li>
+        ))}
+      </ul>
     </div>
   );
-}
+};
+
+export default ManageTeam;

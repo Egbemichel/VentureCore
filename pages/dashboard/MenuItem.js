@@ -50,10 +50,13 @@ export const MenuItem = ({ i, isOpen }) => {
       variants={variants}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
-      className={`${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+      className={`${isOpen ? "pointer-events-auto" : "pointer-events-none"} `}
     >
       {i < links.length ? (
-        <Link href={links[i].path} className="flex items-center space-x-2">
+        <Link
+          href={links[i].path}
+          className="flex items-center space-x-2 nav-li"
+        >
           <div className="icon-placeholder">
             {/* Change icon color if active */}
             {React.createElement(links[i].icon, {
@@ -70,7 +73,7 @@ export const MenuItem = ({ i, isOpen }) => {
         </Link>
       ) : (
         <div
-          className="flex items-center space-x-2 cursor-pointer"
+          className="flex items-center space-x-2 cursor-pointer nav-li"
           onClick={handleLogout}
         >
           <div className="icon-placeholder">

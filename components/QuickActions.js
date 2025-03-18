@@ -28,8 +28,8 @@ const QuickActions = ({ selectedProject, userId }) => {
         ? [
             {
               label: "Tasks",
-              route: "/dashboard/add-task",
-              color: "bg-green-500",
+              route: `/dashboard/add-task?projectId=${selectedProject.id}`,
+              color: "bg-blue-500",
               icon: <PlusIcon />,
               mt: "mt-[70px]",
             },
@@ -42,7 +42,7 @@ const QuickActions = ({ selectedProject, userId }) => {
             },
             {
               label: "Manage",
-              route: "/dashboard/manage-team",
+              route: `/dashboard/manage-team?projectId=${selectedProject.id}`,
               color: "bg-yellow-500",
               icon: <ManageIcon />,
               mt: "mt-[210px]",

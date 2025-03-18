@@ -36,20 +36,19 @@ button {
   background: transparent;
 }
 
-ul,
-li {
+.nav-ul,
+.nav-li {
   margin: 0;
   padding: 0;
 }
 
-ul {
+.nav-ul {
   padding: 25px;
   position: absolute;
-  top: 100px;
   width: 230px;
 }
 
-li {
+.nav-li {
   list-style: none;
   margin-bottom: 20px;
   display: flex;
